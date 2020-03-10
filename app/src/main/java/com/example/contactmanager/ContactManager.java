@@ -208,14 +208,6 @@ public class ContactManager {
                 Log.d(TAG, "editContact: Failed to close file");
             }
         }
-
-        // Edit contact in the local contact list
-        Contact contactToBeEdited = findContactById(id);
-        contactToBeEdited.setFirstName(fName);
-        contactToBeEdited.setLastName(lName);
-        contactToBeEdited.setPhoneNum(phoneNum);
-        contactToBeEdited.setDateOfBirth(dob);
-        contactToBeEdited.setDateOfFirstContact(dofc);
     }
 
     public Contact findContactById(int i) {
