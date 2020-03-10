@@ -5,29 +5,42 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Contact implements Serializable {
 
-    private final int id; // for random access pointer
+    private final int id; // for random access file pointer
     private String firstName;
     private String lastName;
-    private int phoneNum;
-    private String birthDate; // 10 characters
+    private String phoneNum;  // 10 digits
+    private String dateOfBirth; // 10 characters
     private String dateOfFirstContact; // 10 characters
     private static final AtomicInteger count = new AtomicInteger(0);
 
-    Contact(String firstName, String lastName, int phoneNum, String birthDate, String dateOfFirstContact) {
+    Contact(String firstName, String lastName, String phoneNum, String birthDate, String dateOfFirstContact) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNum = phoneNum;
-        this.birthDate = birthDate;
+        this.dateOfBirth = birthDate;
         this.dateOfFirstContact = dateOfFirstContact;
-        id = count.incrementAndGet();
+        id = count.getAndIncrement();
     }
 
-    public int getPhoneNum() {
+    Contact(int id, String firstName, String lastName, String phoneNum, String birthDate, String dateOfFirstContact) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNum = phoneNum;
+        this.dateOfBirth = birthDate;
+        this.dateOfFirstContact = dateOfFirstContact;
+        this.id = id;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPhoneNum() {
         return phoneNum;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public String getDateOfFirstContact() {
@@ -42,10 +55,6 @@ public class Contact implements Serializable {
         return lastName;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public void setDateOfFirstContact(String dateOfFirstContact) {
         this.dateOfFirstContact = dateOfFirstContact;
     }
@@ -58,7 +67,7 @@ public class Contact implements Serializable {
         this.lastName = lastName;
     }
 
-    public void setPhoneNum(int phoneNum) {
+    public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
 

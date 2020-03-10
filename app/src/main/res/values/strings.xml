@@ -2,4 +2,14 @@
     <string name="app_name">ContactManager</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_create_contact">CreateContact</string>
+    <string name="delete_string">Delete</string>
+    <string name="save_string">Save</string>
+    <string name="date_of_birth_string">Date of Birth</string>
+    <string name="date_of_first_contact_string">Date of First Contact</string>
+    <string name="phone_string">Phone</string>
+    <string name="last_name_string">Last Name</string>
+    <string name="first_name_string">First Name</string>
+    <string name="ex_5126335449_string">ex. 5126335449</string>
+    <string name="ex_man_string">ex. Tony</string>
+    <string name="ex_iron_string">ex. Stark</string>
 </resources>
