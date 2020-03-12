@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
     static final int ADD_MODE = 1;
 
     File filePath;
-    private static ArrayList<Contact> mContactList;
-    ArrayAdapter<String> adapter;
+    private ArrayList<Contact> mContactList;
+    ContactListAdapter contactListAdapter;
     ListView listView;
+    ContactManager mContactManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +46,13 @@ public class MainActivity extends AppCompatActivity {
 
         filePath = new File(getFilesDir(), "contacts.txt");
 
-        ContactManager contactManager = new ContactManager(filePath);
-
-
-        //mContactList = mContactManager.getAllContactsFromDb(filePath);
-        mContactList = contactManager.getContactList();
+        mContactManager = new ContactManager(filePath);
+        mContactList = mContactManager.getContactList();
 
         if (mContactList != null && mContactList.size() != 0) {
-            String[] names = getListOfFirstNames(mContactList);
             // Inflate the list view with first names of every contact and display it
-             adapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, names);
-            listView.setAdapter(adapter);
-        }
-
-
-        //mContactList = mContactManager.getAllContactsFromDb(filePath);
-        System.out.println("Value of contactList: " + mContactList);
-        for (Contact c: mContactList) {
-            System.out.println("Name: " + c.getFirstName());
+            contactListAdapter = new ContactListAdapter(this, android.R.layout.simple_list_item_1, mContactList);
+            listView.setAdapter(contactListAdapter);
         }
 
         // Click listener to add a contact
@@ -84,9 +73,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onItemClick: List item clicked");
 
                 Intent editContactIntent = new Intent(getApplicationContext(), CreateContact.class);
-                editContactIntent.putExtra("contactId", position);
-                editContactIntent.putExtra("mode", EDIT_MODE);
-                startActivityForResult(editContactIntent, EDIT_CONTACT_REQUEST, null);
+                //String FullName = parent.getSelectedItem().toString();
+                //Contact contact = mContactManager.getContactByFullName(FullName);
+                //if (contact != null) {
+                    Contact contact = (Contact) parent.getItemAtPosition(position);
+                    int contactId = contact.getId();
+                    editContactIntent.putExtra("contactId", contactId);
+                    editContactIntent.putExtra("mode", EDIT_MODE);
+                    startActivityForResult(editContactIntent, EDIT_CONTACT_REQUEST, null);
+                //}
+
 
             }
         });
@@ -98,59 +94,62 @@ public class MainActivity extends AppCompatActivity {
         // Check which request we're responding to
         if (requestCode == ADD_CONTACT_REQUEST) {
             // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
+            //if (resultCode == RESULT_OK) {
                 // The added picked a contact.
                 if (data != null) {
-//                    mContactList = mContactManager.getAllContactsFromDb(filePath);
-//                    if (mContactList.size() != 0) {
-//                        String[] names = getListOfFirstNames(mContactList);
-//                        adapter.addAll(names);
-//                        // Inflate the list view with first names of every contact and display it
-//                        adapter.notifyDataSetChanged();
-//                    }
-                    //Contact contact = (Contact)data.getSerializableExtra("Contact");
+                    contactListAdapter.clear();
+                    ContactManager cm = new ContactManager(filePath);
+                    ArrayList<Contact> cList = cm.getContactList();
+                    contactListAdapter.addAll(cList);
+                    contactListAdapter.notifyDataSetChanged();
                 }
-
-            }
+           // }
             // result code was RESULT_CANCELED do nothing
         } else if (requestCode == DELETE_CONTACT_REQUEST) {
-            if (resultCode == RESULT_OK) {
-
-            }
+            //if (resultCode == RESULT_OK) {
+                contactListAdapter.clear();
+                ContactManager cm = new ContactManager(filePath);
+                ArrayList<Contact> cList = cm.getContactList();
+                contactListAdapter.addAll(cList);
+                contactListAdapter.notifyDataSetChanged();
+            //}
+        } else if (requestCode == EDIT_CONTACT_REQUEST) {
+            //if (resultCode == RESULT_OK) {
+                //if (data != null) {
+                    //int id = data.getIntExtra("contactId", -1);
+                    contactListAdapter.clear();
+                    ContactManager cm = new ContactManager(filePath);
+                    ArrayList<Contact> cList = cm.getContactList();
+                    contactListAdapter.addAll(cList);
+                    contactListAdapter.notifyDataSetChanged();
+                //}
+           // }
         }
     }
 
-
-
-
-    private String[] getListOfFirstNames(ArrayList<Contact> contactList) {
-
-        System.out.println("arr size: " + contactList.size());
-
-        int listSize = contactList.size();
-        int i = 0;
-        String[] names = new String[listSize];
-        for (Contact c: contactList) {
-            names[i] = c.getFirstName() + " " + c.getLastName();
-            i++;
-        }
-
-        return names;
-    }
-
-    private void updateUI() {
-
-    }
+//    private String[] getListOfFirstNames(ArrayList<Contact> contactList) {
+//
+//        System.out.println("arr size: " + contactList.size());
+//
+//        int listSize = contactList.size();
+//        int i = 0;
+//        String[] names = new String[listSize];
+//        for (Contact c: contactList) {
+//            names[i] = c.getFirstName() + " " + c.getLastName();
+//            i++;
+//        }
+//
+//        return names;
+//    }
 
     @Override
     protected void onResume() {
-//        mContactList = mContactManager.getAllContactsFromDb(filePath);
+//        mContactList = mContactManager.getContactList();
 //        if (mContactList!= null) {
-//            String[] names = getListOfFirstNames(mContactList);
-//            adapter.addAll(names);
-//            adapter.notifyDataSetChanged();
+//            contactListAdapter.addAll(mContactList);
+//            contactListAdapter.notifyDataSetChanged();
 //        }
-
+//
         super.onResume();
     }
 }

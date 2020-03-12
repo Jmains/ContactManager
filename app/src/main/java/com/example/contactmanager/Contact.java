@@ -19,7 +19,7 @@ public class Contact implements Serializable {
         this.phoneNum = phoneNum;
         this.dateOfBirth = birthDate;
         this.dateOfFirstContact = dateOfFirstContact;
-        id = count.getAndIncrement();
+        id = count.incrementAndGet();
     }
 
     Contact(int id, String firstName, String lastName, String phoneNum, String birthDate, String dateOfFirstContact) {

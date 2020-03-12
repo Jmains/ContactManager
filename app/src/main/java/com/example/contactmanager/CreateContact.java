@@ -139,13 +139,14 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
 
         // Return to main activity with request code
         Intent intent = new Intent();
+        intent.putExtra("contactId", mContactId);
         setResult(EDIT_CONTACT_REQUEST, intent);
         finish();
     }
 
     public void onDelete(View v) {
         filePath = new File(getFilesDir(), "contacts.txt");
-        mContactManager.deleteContactFromDb(mContactId);
+        mContactManager.deleteContactFromDb(mContact.getId());
 
         Intent intent = new Intent();
         setResult(DELETE_CONTACT_REQUEST, intent);
