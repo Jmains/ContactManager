@@ -10,15 +10,15 @@ import java.util.ArrayList;
 
 public class ContactManager {
 
-    private File fp;
-
     private static final String TAG = "ContactManager";
-
+    private File fp;
     private static final int SIZE_OF_EACH_RECORD = 95;
-
     private ArrayList<Contact> mContactList = new ArrayList<>();
     private int mLatestUserIdInDb = 0;
 
+    /* This construct reads through the contents of the
+    * database and inserts it into the mContact Array list
+    * it takes in the Filepath as a parameter and returns nothing*/
     ContactManager(File filePath) {
 
         fp = filePath;
@@ -114,6 +114,11 @@ public class ContactManager {
         }
     }
 
+    /* This method takes in the first name, last name, phone number,
+    * date of birth and date of first contact of the contact.
+    * With these values it create a Contact object instance, writes
+    * the values to the database and adds the contact to the
+    * contactList array list */
     public void addContactToDb(String fName, String lName, String phoneNum, String dob, String dofc) {
 
         // Create a new contact
@@ -160,12 +165,16 @@ public class ContactManager {
         mContactList.add(contact);
     }
 
+    /* This method takes in the contact id as a parameter and deletes
+    * the contact in the database by looking for the specific id in
+    * the database. It does a linear search in the database */
     public void deleteContactFromDb(int id) {
         // Remove the contact from the database by fill that area with empty string
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(fp, "rw");
             raf.seek(0);
+            // Subtract 1 because user ID's start at 1 not 0
             int contactPos = (id - 1) * SIZE_OF_EACH_RECORD;
             raf.seek(contactPos);
 
@@ -202,6 +211,11 @@ public class ContactManager {
         }
     }
 
+    /*This method takes in the contact id, first name, last name,
+    * phone number, date of birth and date of first contact as
+    * parameters. The method does a linear search in the database
+    * to look for the id. It then clears the record then rewrites
+    * the new data into the database. */
     public void editContactInDb(int id, String fName, String lName, String phoneNum, String dob, String dofc) {
 
         // Edit the contact in the database
@@ -302,6 +316,9 @@ public class ContactManager {
         }
     }
 
+    /* This method takes a contact id as a parameter. It loops through
+    * the contactList array list and searches for a matching ID in the
+    * arraylist and returns the matched id. */
     public Contact findContactById(int i) {
         // Get updated Contact List
         ArrayList<Contact> cl = getContactList();
@@ -312,6 +329,8 @@ public class ContactManager {
         return null;
     }
 
+    /* This takes in nothing as a parameter and simply returns
+    * the ArrayList of contacts defined by the class. */
     public ArrayList<Contact> getContactList() {
         return mContactList;
     }

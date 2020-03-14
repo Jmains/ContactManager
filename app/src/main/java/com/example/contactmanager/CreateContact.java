@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CreateContact extends AppCompatActivity implements DatePickerFragment.OnDateSelected {
 
@@ -23,8 +26,13 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     static final int ADD_CONTACT_REQUEST = 1; // The request code.
     static final int DELETE_CONTACT_REQUEST = 2; // The request code.
     static final int EDIT_CONTACT_REQUEST = 3; // The request code.
+    static final int CANCEL_CONTACT_REQUEST = 4; // The request code.
     static final int ADD_MODE = 1; //
     static final int EDIT_MODE = 2; //
+    static final int DOB_TV = 1;
+    static final int DOFC_TV = 2;
+
+
 
     // Widgets
     Button mSaveBtn;
@@ -79,6 +87,9 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
 
                 mAddBtn.setVisibility(View.VISIBLE);
                 mCancelBtn.setVisibility(View.VISIBLE);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                mDofcTv.setText(sdf.format(date));
 
 
             } else if (mMode == EDIT_MODE) {
@@ -88,6 +99,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
                 mContactId = intent.getIntExtra("contactId", -1);
                 mContact = mContactManager.findContactById(mContactId);
                 setFormFields(mContact);
+
             } else {
                 Log.d(TAG, "onCreate: No mode was received");
             }
@@ -95,8 +107,20 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     }
 
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+        Bundle bundle = new Bundle();
+        switch (v.getId()) {
+            case R.id.id_add_dob_tv:
+                bundle.putInt("tvKey", DOB_TV); // 1 for DOB
+                bundle.putInt("datePickerStyle", R.style.CustomDatePickerDialog);
+                break;
+            case R.id.id_add_dofc_tv:
+                bundle.putInt("tvKey", DOFC_TV);  // 2 for DOFC
+                break;
+        }
+
+        DialogFragment dateFragment = new DatePickerFragment();
+        dateFragment.setArguments(bundle);
+        dateFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     public void onAdd(View v) {
@@ -144,6 +168,12 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         finish();
     }
 
+    public void onCancel(View v) {
+        Intent intent = new Intent();
+        setResult(CANCEL_CONTACT_REQUEST, intent);
+        finish();
+    }
+
     public void onDelete(View v) {
         filePath = new File(getFilesDir(), "contacts.txt");
         mContactManager.deleteContactFromDb(mContact.getId());
@@ -154,10 +184,20 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     }
 
     @Override
-    public void sendData(String data) {
+    public void sendDate(String date, int tvKey) {
         Log.d(TAG, "sendData: got the input");
-        mDobTv.setText(data);
-        mDofcTv.setText(data);
+        switch (tvKey) {
+            case DOB_TV:
+                mDobTv.setText(date);
+                break;
+            case DOFC_TV:
+                mDofcTv.setText(date);
+                break;
+            default:
+                mDobTv.setText(date);
+                mDofcTv.setText(date);
+        }
+
     }
 
     private void setFormFields(Contact contact) {

@@ -12,11 +12,12 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     File filePath;
     private ArrayList<Contact> mContactList;
-    ContactListAdapter contactListAdapter;
+    ContactListAdapter mContactListAdapter;
     ListView listView;
     ContactManager mContactManager;
 
@@ -43,16 +44,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listView = findViewById(R.id.id_list_view);
-
         filePath = new File(getFilesDir(), "contacts.txt");
-
         mContactManager = new ContactManager(filePath);
         mContactList = mContactManager.getContactList();
+        sortByLastName(mContactList);
 
         if (mContactList != null && mContactList.size() != 0) {
             // Inflate the list view with first names of every contact and display it
-            contactListAdapter = new ContactListAdapter(this, android.R.layout.simple_list_item_1, mContactList);
-            listView.setAdapter(contactListAdapter);
+            mContactListAdapter = new ContactListAdapter(this, android.R.layout.simple_list_item_1, mContactList);
+            listView.setAdapter(mContactListAdapter);
         }
 
         // Click listener to add a contact
@@ -73,83 +73,39 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onItemClick: List item clicked");
 
                 Intent editContactIntent = new Intent(getApplicationContext(), CreateContact.class);
-                //String FullName = parent.getSelectedItem().toString();
-                //Contact contact = mContactManager.getContactByFullName(FullName);
-                //if (contact != null) {
-                    Contact contact = (Contact) parent.getItemAtPosition(position);
-                    int contactId = contact.getId();
-                    editContactIntent.putExtra("contactId", contactId);
-                    editContactIntent.putExtra("mode", EDIT_MODE);
-                    startActivityForResult(editContactIntent, EDIT_CONTACT_REQUEST, null);
-                //}
-
-
+                Contact contact = (Contact) parent.getItemAtPosition(position);
+                int contactId = contact.getId();
+                editContactIntent.putExtra("contactId", contactId);
+                editContactIntent.putExtra("mode", EDIT_MODE);
+                startActivityForResult(editContactIntent, EDIT_CONTACT_REQUEST, null);
             }
         });
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // Check which request we're responding to
-        if (requestCode == ADD_CONTACT_REQUEST) {
-            // Make sure the request was successful
-            //if (resultCode == RESULT_OK) {
-                // The added picked a contact.
-                if (data != null) {
-                    contactListAdapter.clear();
-                    ContactManager cm = new ContactManager(filePath);
-                    ArrayList<Contact> cList = cm.getContactList();
-                    contactListAdapter.addAll(cList);
-                    contactListAdapter.notifyDataSetChanged();
+        // Regardless of the request code update UI with new information
+        mContactListAdapter.clear();
+        ContactManager cm = new ContactManager(filePath);
+        ArrayList<Contact> contacts = cm.getContactList();
+        sortByLastName(contacts);
+        mContactListAdapter.addAll(contacts);
+        mContactListAdapter.notifyDataSetChanged();
+    }
+
+    // Simple method that takes the array list of contacts and
+    // sorts the contacts by last name
+    public void sortByLastName(ArrayList<Contact> contacts) {
+        Collections.sort(contacts, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact c1, Contact c2) {
+                int res = c1.getLastName().compareToIgnoreCase(c2.getLastName());
+                if (res != 0) {
+                    return res;
                 }
-           // }
-            // result code was RESULT_CANCELED do nothing
-        } else if (requestCode == DELETE_CONTACT_REQUEST) {
-            //if (resultCode == RESULT_OK) {
-                contactListAdapter.clear();
-                ContactManager cm = new ContactManager(filePath);
-                ArrayList<Contact> cList = cm.getContactList();
-                contactListAdapter.addAll(cList);
-                contactListAdapter.notifyDataSetChanged();
-            //}
-        } else if (requestCode == EDIT_CONTACT_REQUEST) {
-            //if (resultCode == RESULT_OK) {
-                //if (data != null) {
-                    //int id = data.getIntExtra("contactId", -1);
-                    contactListAdapter.clear();
-                    ContactManager cm = new ContactManager(filePath);
-                    ArrayList<Contact> cList = cm.getContactList();
-                    contactListAdapter.addAll(cList);
-                    contactListAdapter.notifyDataSetChanged();
-                //}
-           // }
-        }
+                return c1.getLastName().compareToIgnoreCase(c2.getLastName());
+            }
+        });
     }
 
-//    private String[] getListOfFirstNames(ArrayList<Contact> contactList) {
-//
-//        System.out.println("arr size: " + contactList.size());
-//
-//        int listSize = contactList.size();
-//        int i = 0;
-//        String[] names = new String[listSize];
-//        for (Contact c: contactList) {
-//            names[i] = c.getFirstName() + " " + c.getLastName();
-//            i++;
-//        }
-//
-//        return names;
-//    }
-
-    @Override
-    protected void onResume() {
-//        mContactList = mContactManager.getContactList();
-//        if (mContactList!= null) {
-//            contactListAdapter.addAll(mContactList);
-//            contactListAdapter.notifyDataSetChanged();
-//        }
-//
-        super.onResume();
-    }
 }
