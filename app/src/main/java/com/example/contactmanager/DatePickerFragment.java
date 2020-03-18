@@ -27,7 +27,7 @@ import java.util.Calendar;
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
-    // Interface to receive data in parent activity
+    // Interface to send data to parent activity
     public interface OnDateSelected {
         void sendDate(String date, int tvKey);
     }
