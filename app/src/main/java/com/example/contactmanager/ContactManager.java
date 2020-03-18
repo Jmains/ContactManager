@@ -1,3 +1,16 @@
+/* Contact Manager Program
+*
+*  A simple android app that mimics the functionality of a contact manager
+*  in either Android or iOS phones. Users can view their list of contacts
+*  sorted in alphabetical order by last name. They may also add, edit,
+*  and remove a contact from the contact list when a contact is tapped on.
+*
+*  When adding a contact, users must add the contacts first name, last name,
+*  phone number, date of birth, and date of first contact.
+*
+*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+        NetID: sxm163830 */
+
 package com.example.contactmanager;
 
 import android.util.Log;
@@ -10,7 +23,7 @@ import java.util.ArrayList;
 
 public class ContactManager {
 
-    private static final String TAG = "ContactManager";
+    //private static final String TAG = "ContactManager";
 
     private static final int SIZE_OF_EACH_RECORD = 95;
 
@@ -105,13 +118,15 @@ public class ContactManager {
             raf.close();
 
         } catch (IOException e) {
-            Log.d(TAG, "ContactManager: Failed to open and read file");
+            //Log.d(TAG, "ContactManager: Failed to open and read file");
+            e.printStackTrace();
         } finally {
             if (raf != null) {
                 try {
                     raf.close();
                 } catch (IOException e) {
-                    Log.d(TAG, "ContactManager: Failed to close file");
+                    //Log.d(TAG, "ContactManager: Failed to close file");
+                    e.printStackTrace();
                 }
             }
         }
@@ -153,14 +168,16 @@ public class ContactManager {
             raf.close();
 
         } catch (IOException e) {
-            Log.d(TAG, "addContactToDb: Failed to add contact to database");
+            //Log.d(TAG, "addContactToDb: Failed to add contact to database");
+            e.printStackTrace();
         } finally {
             try {
                 if (raf != null) {
                     raf.close();
                 }
             } catch (IOException e) {
-                Log.d(TAG, "addContactToDb: failed to close file");
+                //Log.d(TAG, "addContactToDb: failed to close file");
+                e.printStackTrace();
             }
         }
 
@@ -198,14 +215,16 @@ public class ContactManager {
             raf.close();
 
         } catch (IOException e) {
-            Log.d(TAG, "deleteContactFromDb: Failed to remove contact from db");
+            //Log.d(TAG, "deleteContactFromDb: Failed to remove contact from db");
+            e.printStackTrace();
         } finally {
             try {
                 if (raf != null) {
                     raf.close();
                 }
             } catch (IOException e) {
-                Log.d(TAG, "deleteContactFromDb: Failed to close the file");
+                //Log.d(TAG, "deleteContactFromDb: Failed to close the file");
+                e.printStackTrace();
             }
         }
     }
@@ -267,7 +286,7 @@ public class ContactManager {
 
             // If end of file reached then return
             if (bytesRead == fileLength) {
-                Log.d(TAG, "editContactInDb: End of file reached...no id match");
+                //Log.d(TAG, "editContactInDb: End of file reached...no id match");
                 return;
             }
 
@@ -303,14 +322,16 @@ public class ContactManager {
             raf.close();
 
         } catch (IOException e) {
-            Log.d(TAG, "editContact: failed to edit contact");
+            //Log.d(TAG, "editContact: failed to edit contact");
+            e.printStackTrace();
         } finally {
             try {
                 if (raf != null) {
                     raf.close();
                 }
             } catch (IOException e) {
-                Log.d(TAG, "editContact: Failed to close file");
+                //Log.d(TAG, "editContact: Failed to close file");
+                e.printStackTrace();
             }
         }
     }

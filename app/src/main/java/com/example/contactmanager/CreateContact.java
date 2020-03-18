@@ -1,3 +1,16 @@
+/* Contact Manager Program
+*
+*  A simple android app that mimics the functionality of a contact manager
+*  in either Android or iOS phones. Users can view their list of contacts
+*  sorted in alphabetical order by last name. They may also add, edit,
+*  and remove a contact from the contact list when a contact is tapped on.
+*
+*  When adding a contact, users must add the contacts first name, last name,
+*  phone number, date of birth, and date of first contact.
+*
+*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+        NetID: sxm163830 */
+
 package com.example.contactmanager;
 
 import android.content.Intent;
@@ -22,7 +35,7 @@ import java.util.Date;
 
 public class CreateContact extends AppCompatActivity implements DatePickerFragment.OnDateSelected {
 
-    private static final String TAG = "CreateContactActivity";
+    //private static final String TAG = "CreateContactActivity";
 
     // Request codes
     static final int ADD_CONTACT_REQUEST = 1;
@@ -116,7 +129,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
                 setFormFields(mContact);
 
             } else {
-                Log.d(TAG, "onCreate: No mode was received");
+                //Log.d(TAG, "onCreate: No mode was received");
             }
         }
     }
@@ -219,7 +232,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     parameters and returns void. */
     @Override
     public void sendDate(String date, int tvKey) {
-        Log.d(TAG, "sendData: got the input");
+        //Log.d(TAG, "sendData: input received");
         switch (tvKey) {
             case DOB_TV:
                 mDobTv.setText(date);
@@ -291,7 +304,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     * takes no parameters. */
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (imm.isAcceptingText()) { // Check keybaord is open
+        if (imm.isAcceptingText()) { // Check keyboard is open
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }

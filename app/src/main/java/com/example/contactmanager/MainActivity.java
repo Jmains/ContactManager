@@ -1,4 +1,4 @@
-/*Contact Manager Program
+/* Contact Manager Program
 *
 *  A simple android app that mimics the functionality of a contact manager
 *  in either Android or iOS phones. Users can view their list of contacts
@@ -34,7 +34,7 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    //private static final String TAG = "MainActivity";
 
     // onActivityForResult Requests
     static final int ADD_CONTACT_REQUEST = 1;
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: List item clicked");
+                //Log.d(TAG, "onItemClick: List item clicked");
 
                 Intent editContactIntent = new Intent(getApplicationContext(), CreateContact.class);
                 Contact contact = (Contact) parent.getItemAtPosition(position);
