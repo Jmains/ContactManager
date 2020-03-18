@@ -11,8 +11,11 @@ import java.util.ArrayList;
 public class ContactManager {
 
     private static final String TAG = "ContactManager";
-    private File fp;
+
     private static final int SIZE_OF_EACH_RECORD = 95;
+
+    // Member variables
+    private File mFilePath;
     private ArrayList<Contact> mContactList = new ArrayList<>();
     private int mLatestUserIdInDb = 0;
 
@@ -21,10 +24,10 @@ public class ContactManager {
     * it takes in the Filepath as a parameter and returns nothing*/
     ContactManager(File filePath) {
 
-        fp = filePath;
+        mFilePath = filePath;
         RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(fp, "r");
+            raf = new RandomAccessFile(mFilePath, "r");
             // Go to beginning of file
             raf.seek(0);
 
@@ -128,7 +131,7 @@ public class ContactManager {
         // Add the contact to the database
         RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(fp, "rw");
+            raf = new RandomAccessFile(mFilePath, "rw");
             // Seek to the end of the file
             raf.seek(raf.length());
             long fileLength = raf.length();
@@ -172,7 +175,7 @@ public class ContactManager {
         // Remove the contact from the database by fill that area with empty string
         RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(fp, "rw");
+            raf = new RandomAccessFile(mFilePath, "rw");
             raf.seek(0);
             // Subtract 1 because user ID's start at 1 not 0
             int contactPos = (id - 1) * SIZE_OF_EACH_RECORD;
@@ -185,13 +188,9 @@ public class ContactManager {
 
             // Write empty bytes to file
             raf.write(fnAndln);
-            //raf.seek(contactPos + 25);
             raf.write(fnAndln);
-            //raf.seek(contactPos + 50);
             raf.write(phone);
-            //raf.seek(contactPos + 70);
             raf.write(dobAnddofc);
-            //raf.seek(contactPos + 80);
             raf.write(dobAnddofc);
             raf.write(emptyid);
             raf.writeBytes(System.getProperty("line.separator"));   //2 bytes
@@ -217,78 +216,78 @@ public class ContactManager {
     * to look for the id. It then clears the record then rewrites
     * the new data into the database. */
     public void editContactInDb(int id, String fName, String lName, String phoneNum, String dob, String dofc) {
-
-        // Edit the contact in the database
         RandomAccessFile raf = null;
         try {
-            raf = new RandomAccessFile(fp, "rw");
+            raf = new RandomAccessFile(mFilePath, "rw");
             // Seek to beginning of file
             raf.seek(0);
 
             if (raf.length() == 0) {
-                // You are the first user
+                // No users in db
                 return;
             }
-            // Read file line by line
-            int bytesRead = 0;
-            //int id = 0;
-            long length = raf.length();
 
-            while (bytesRead < length) {
+            int bytesRead = 0;
+            long fileLength = raf.length();
+
+            while (bytesRead < fileLength) {
                 raf.seek(bytesRead);
 
                 byte[] fByte = new byte[1];
                 raf.read(fByte);
                 int firstTwoBytes = new BigInteger(fByte).intValue();
-                raf.seek(bytesRead);
-                // If the first byte is a zero then continue
-                // to the next iteration of the loop
+
+                // If the first byte is a zero then that record is
+                // empty so jump to the next record.
                 if (firstTwoBytes == 0) {
                     raf.skipBytes(SIZE_OF_EACH_RECORD);
                     bytesRead += SIZE_OF_EACH_RECORD;
                     continue;
                 }
-                // Seek to beginning of record
+
+                // Seek to beginning of record b/c we just
+                // read the first byte.
                 raf.seek(bytesRead);
+
+                // Seek to where the id or the record is located
+                // and read it.
                 raf.seek(bytesRead + 90);
                 byte[] tempDbId = new byte[4];
                 raf.read(tempDbId);
                 int dbId = new BigInteger(tempDbId).intValue();
+                // Compare the db id to the given id
+                // if not a match then go to the next record.
                 if (dbId != id) {
                     bytesRead += SIZE_OF_EACH_RECORD;
                     continue;
                 }
-                // Id match found
+                // Id match found or EOF reached
                 break;
             }
 
             // If end of file reached then return
-            if (bytesRead == length) {
-                Log.d(TAG, "editContactInDb: End of file reached");
+            if (bytesRead == fileLength) {
+                Log.d(TAG, "editContactInDb: End of file reached...no id match");
                 return;
             }
 
-            // Clear the previous bytes
+            // Seek to beginning of the record
             raf.seek(bytesRead);
 
             byte[] fnAndln = new byte[25];
             byte[] phone = new byte[20];
             byte[] dobAnddofc = new byte[10];
 
-            // Write empty bytes to file
-            raf.write(fnAndln);
-            //raf.seek(contactPos + 25);
-            raf.write(fnAndln);
-            //raf.seek(contactPos + 50);
-            raf.write(phone);
-            //raf.seek(contactPos + 70);
-            raf.write(dobAnddofc);
-            //raf.seek(contactPos + 80);
-            raf.write(dobAnddofc);
+            // Write empty bytes to the record
+            raf.write(fnAndln);     // 25 bytes
+            raf.write(fnAndln);     // 25 bytes
+            raf.write(phone);       // 20 bytes
+            raf.write(dobAnddofc);  // 10 bytes
+            raf.write(dobAnddofc);  // 10 bytes
 
             // Seek back to beginning of record
             raf.seek(bytesRead);
-            // Write into database
+            // Write updated record into database
             raf.write(fName.getBytes());
             raf.seek(bytesRead + 25);
             raf.write(lName.getBytes());
@@ -320,6 +319,8 @@ public class ContactManager {
     * the contactList array list and searches for a matching ID in the
     * arraylist and returns the matched id. */
     public Contact findContactById(int i) {
+        if (i == -1)
+            return null;
         // Get updated Contact List
         ArrayList<Contact> cl = getContactList();
         for (Contact c: cl) {

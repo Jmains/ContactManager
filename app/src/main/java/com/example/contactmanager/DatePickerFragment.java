@@ -4,13 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
@@ -19,23 +14,25 @@ import java.util.Calendar;
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
+    // Interface to receive data in parent activity
     public interface OnDateSelected {
         void sendDate(String date, int tvKey);
     }
 
+    // Member variables
     private OnDateSelected mOnDateSelected;
     private int mTvKey;
-    public int datePickerStyle;
-
 
     private static final String TAG = "DatePickerFragment";
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        int datePickerStyle = -1;
+        // Grab date picker style from parent activity.
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            mTvKey = bundle.getInt("tvKey");
+            mTvKey = bundle.getInt("tvKey");    // 1 == spinner, 2 == calendar
             datePickerStyle = bundle.getInt("datePickerStyle", -1);
         }
         // Use the current date as the default date in the picker
@@ -53,7 +50,7 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        // Do something with the date chosen by the user
+        // Format date with slashes (I'm sure there's an easier way to do this).
         if (month < 10 && day < 10) {
             String date = "0" + (month + 1) + "/" + "0" + day + "/" + year;
             mOnDateSelected.sendDate(date, mTvKey);

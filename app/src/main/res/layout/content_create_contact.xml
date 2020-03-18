@@ -163,56 +163,61 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.255"
+        app:layout_constraintHorizontal_bias="0.221"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
+        app:layout_constraintVertical_bias="0.415" />
+
+    <Button
+        android:id="@+id/id_add_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="114dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="#5CB009"
+        android:onClick="onAdd"
+        android:text="@string/add_string"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/id_cancel_button"
+        app:layout_constraintHorizontal_bias="0.791"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
+        app:layout_constraintVertical_bias="0.507" />
 
     <Button
         android:id="@+id/id_delete_button"
         android:layout_width="108dp"
         android:layout_height="57dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="76dp"
         android:backgroundTint="#F30707"
         android:onClick="onDelete"
         android:text="@string/delete_string"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/id_save_button"
-        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv" />
+        app:layout_constraintHorizontal_bias="0.683"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
+        app:layout_constraintVertical_bias="0.423" />
 
     <Button
         android:id="@+id/id_cancel_button"
         android:layout_width="109dp"
         android:layout_height="56dp"
-        android:layout_marginEnd="92dp"
+        android:layout_marginEnd="72dp"
         android:layout_marginBottom="28dp"
         android:backgroundTint="#ED000B"
+        android:onClick="onCancel"
         android:text="@android:string/cancel"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:onClick="onCancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
-        app:layout_constraintVertical_bias="0.615" />
-
-    <Button
-        android:id="@+id/id_add_button"
-        android:layout_width="114dp"
-        android:layout_height="54dp"
-        android:layout_marginBottom="28dp"
-        android:backgroundTint="#4DA50B"
-        android:onClick="onAdd"
-        android:text="@string/add_string"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/id_cancel_button"
-        app:layout_constraintHorizontal_bias="0.802"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
-        app:layout_constraintVertical_bias="0.621" />
+        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

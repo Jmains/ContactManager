@@ -23,39 +23,49 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    // onActivityForResult Requests
     static final int ADD_CONTACT_REQUEST = 1;
     static final int DELETE_CONTACT_REQUEST = 2;
     static final int EDIT_CONTACT_REQUEST = 3;
     static final int EDIT_MODE = 2;
     static final int ADD_MODE = 1;
 
-    File filePath;
-    private ArrayList<Contact> mContactList;
+    // Member Variables
+    File mFilePath;
+    ArrayList<Contact> mContactList;
     ContactListAdapter mContactListAdapter;
-    ListView listView;
+    ListView mListView;
     ContactManager mContactManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        // Initial Setup
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Contacts");
 
-        listView = findViewById(R.id.id_list_view);
-        filePath = new File(getFilesDir(), "contacts.txt");
-        mContactManager = new ContactManager(filePath);
+        // Grab Views
+        mListView = findViewById(R.id.id_list_view);
+
+        // Grab Database file path
+        mFilePath = new File(getFilesDir(), "contacts.txt");
+
+        // Grab Database manager, grab contacts and sort
+        mContactManager = new ContactManager(mFilePath);
         mContactList = mContactManager.getContactList();
         sortByLastName(mContactList);
 
         if (mContactList != null && mContactList.size() != 0) {
             // Inflate the list view with first names of every contact and display it
-            mContactListAdapter = new ContactListAdapter(this, android.R.layout.simple_list_item_1, mContactList);
-            listView.setAdapter(mContactListAdapter);
+            mContactListAdapter = new ContactListAdapter(this,
+                    android.R.layout.simple_list_item_1, mContactList);
+            mListView.setAdapter(mContactListAdapter);
         }
 
-        // Click listener to add a contact
+        // Click listener to add a contact. (+) Button on screen
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Click listener to edit a contact
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // This listener passes the contact id to the new activity
+        // And passes the mode that the new activity should be in
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: List item clicked");
@@ -85,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Regardless of the request code update UI with new information
+        // b/c for now all request codes require updating the UI.
         mContactListAdapter.clear();
-        ContactManager cm = new ContactManager(filePath);
+        ContactManager cm = new ContactManager(mFilePath);
         ArrayList<Contact> contacts = cm.getContactList();
         sortByLastName(contacts);
         mContactListAdapter.addAll(contacts);
@@ -94,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Simple method that takes the array list of contacts and
-    // sorts the contacts by last name
+    // sorts the contacts by last name. It takes the contacts
+    // arraylist as arguments and returns void.
     public void sortByLastName(ArrayList<Contact> contacts) {
         Collections.sort(contacts, new Comparator<Contact>() {
             @Override
@@ -107,5 +121,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }

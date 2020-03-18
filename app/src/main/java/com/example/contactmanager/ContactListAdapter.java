@@ -14,9 +14,16 @@ import java.util.ArrayList;
 
 public class ContactListAdapter extends ArrayAdapter<Contact> {
 
+    // Member variables
     private Context mContext;
-    int mResource;
-    int id;
+    private int mResource;
+
+    // ViewHolder class for Contact object
+    // could have more fields but firstName
+    // is all we need
+    static class ViewHolder {
+        TextView contactName;
+    }
 
     public ContactListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Contact> objects) {
         super(context, resource, objects);
@@ -24,24 +31,36 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
         mResource = resource;
     }
 
-    @Nullable
-    @Override
-    public Contact getItem(int position) {
-        return super.getItem(position);
-    }
-
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String firstName = getItem(position).getFirstName();
-        String lastName = getItem(position).getLastName();
-        id = getItem(position).getId();
+        String firstName = null;
+        String lastName = null;
+        // Grab the Contact object at the position clicked
+        if (getItem(position) != null) {
+            Contact contact = getItem(position);
+            firstName = contact.getFirstName();
+            lastName = contact.getLastName();
+        }
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView = inflater.inflate(mResource, parent, false);
-        TextView builtinTv = convertView.findViewById(android.R.id.text1);
-        String fullName = firstName + " " + lastName;
-        builtinTv.setText(fullName);
+        ViewHolder holder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            convertView = inflater.inflate(mResource, parent, false);
+
+            holder = new ViewHolder();
+            holder.contactName = convertView.findViewById(android.R.id.text1);
+            convertView.setTag(holder);
+
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        if (firstName != null && lastName != null) {
+            String fullName = firstName + " " + lastName;
+            holder.contactName.setText(fullName);
+        }
 
         return convertView;
     }
