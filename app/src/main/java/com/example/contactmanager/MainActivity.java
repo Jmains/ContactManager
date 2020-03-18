@@ -1,3 +1,16 @@
+/*Contact Manager Program
+*
+*  A simple android app that mimics the functionality of a contact manager
+*  in either Android or iOS phones. Users can view their list of contacts
+*  sorted in alphabetical order by last name. They may also add, edit,
+*  and remove a contact from the contact list when a contact is tapped on.
+*
+*  When adding a contact, users must add the contacts first name, last name,
+*  phone number, date of birth, and date of first contact.
+*
+*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+        NetID: sxm163830 */
+
 package com.example.contactmanager;
 
 import android.content.Intent;
@@ -76,9 +89,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Click listener to edit a contact
-        // This listener passes the contact id to the new activity
-        // And passes the mode that the new activity should be in
+        /* Click listener to edit a contact
+         This listener passes the contact id to the new activity
+         And passes the mode that the new activity should be in. */
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -98,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Regardless of the request code update UI with new information
         // b/c for now all request codes require updating the UI.
+        // Grab the contact list from the contactmanager , sort by
+        // last name and inflate the list view.
         mContactListAdapter.clear();
         ContactManager cm = new ContactManager(mFilePath);
         ArrayList<Contact> contacts = cm.getContactList();
@@ -106,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
         mContactListAdapter.notifyDataSetChanged();
     }
 
-    // Simple method that takes the array list of contacts and
-    // sorts the contacts by last name. It takes the contacts
-    // arraylist as arguments and returns void.
+    /* Simple method that takes the array list of contacts and
+     sorts the contacts by last name. It takes the contacts
+     ArrayList as arguments and returns void.*/
     public void sortByLastName(ArrayList<Contact> contacts) {
         Collections.sort(contacts, new Comparator<Contact>() {
             @Override
