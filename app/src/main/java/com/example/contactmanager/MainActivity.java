@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         } else {
-            // Blehh
+            // Blehh no sensor bro...
         }
 
         // Grab Views

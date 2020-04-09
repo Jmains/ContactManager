@@ -1,3 +1,16 @@
+/* Contact Manager Program
+*
+*  A simple android app that mimics the functionality of a contact manager
+*  in either Android or iOS phones. Users can view their list of contacts
+*  sorted in alphabetical order by last name. They may also add, edit,
+*  and remove a contact from the contact list when a contact is tapped on.
+*
+*  When adding a contact, users must add the contacts first name, last name,
+*  phone number, date of birth, and date of first contact.
+*
+*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+        NetID: sxm163830 */
+
 package com.example.contactmanager;
 
 import android.app.Activity;
@@ -7,19 +20,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+/*This class detects phone shakes by the user.
+* Intensity of the phone shake can be adjusted here.*/
+
 public class PhoneShake implements SensorEventListener {
 
-    private Sensor accelerometer;
-    private SensorManager sm;
+    private static final String TAG = "PhoneShake";
+
     private OnShakeListener mShakeListener;
     private long mPreviousShakeTime;
 
     private static final float SHAKE_THRESHOLD = 2.5F;
     private static final int SHAKE_RESET_TIME = 800;
-
-    private static final String TAG = "PhoneShake";
-
-
 
     public void setOnShakeListener(OnShakeListener listener) {
         this.mShakeListener = listener;
