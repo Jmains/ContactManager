@@ -13,7 +13,10 @@
 
 package com.example.contactmanager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     static final int EDIT_MODE = 2;
     static final int ADD_MODE = 1;
 
+    // Sensors
+    private SensorManager mSm;
+    private Sensor mAccelerometer;
+    private PhoneShake mPhoneShake;
+
     // Member Variables
     File mFilePath;
     ArrayList<Contact> mContactList;
@@ -59,6 +67,27 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbar.setTitle("Contacts");
+
+        // Initialize Sensors
+        mSm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mPhoneShake = new PhoneShake();
+
+        if (mSm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            mAccelerometer = mSm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSm.registerListener(mPhoneShake, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+            mPhoneShake.setOnShakeListener(new PhoneShake.OnShakeListener() {
+                @Override
+                public void onShake() {
+                    // Reverse sort the list of names
+                    reverseSortByLastName(mContactList);
+                }
+            });
+
+        } else {
+            // Blehh
+        }
 
         // Grab Views
         mListView = findViewById(R.id.id_list_view);
@@ -108,6 +137,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mSm.registerListener(mPhoneShake, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSm.unregisterListener(mPhoneShake);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Regardless of the request code update UI with new information
         // b/c for now all request codes require updating the UI.
@@ -135,5 +176,10 @@ public class MainActivity extends AppCompatActivity {
                 return c1.getLastName().compareToIgnoreCase(c2.getLastName());
             }
         });
+    }
+
+    public void reverseSortByLastName(ArrayList<Contact> contacts) {
+        sortByLastName(mContactList);
+        Collections.reverse(mContactList);
     }
 }
