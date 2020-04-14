@@ -44,7 +44,7 @@ public class PhoneShake implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // Collect sensor values
+        // grab sensor values
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
