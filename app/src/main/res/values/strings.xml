@@ -13,4 +13,6 @@
     <string name="ex_man_string">ex. Tony</string>
     <string name="ex_iron_string">ex. Stark</string>
     <string name="add_string">add</string>
+    <string name="reinitialize_string">Reinitialize</string>
+    <string name="import_contacts_from_file_string">Import Contacts</string>
 </resources>

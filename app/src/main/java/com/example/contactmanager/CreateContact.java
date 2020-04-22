@@ -16,6 +16,7 @@ package com.example.contactmanager;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -66,6 +67,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     // Member variables
     int mContactId = -1;
     ContactManager mContactManager;
+    ContactManagerTwo mContactManager2;
     Contact mContact;
     File mFilePath;
 
@@ -103,6 +105,8 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         mFilePath = new File(getFilesDir(), "contacts.txt");
         // Grab the database manager
         mContactManager = new ContactManager(mFilePath);
+        // Grab new db manager
+        mContactManager2 = new ContactManagerTwo(this.getApplicationContext());
 
         int mode; // // 1 = add contact, 2 = edit contact
         Intent intent = getIntent();
@@ -125,7 +129,8 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
                 mDeleteBtn.setVisibility(View.VISIBLE);
                 toolbar.setTitle("Edit Contact");
                 mContactId = intent.getIntExtra("contactId", -1);
-                mContact = mContactManager.findContactById(mContactId);
+                //mContact = mContactManager.findContactById(mContactId);
+                mContact = mContactManager2.findContactById(mContactId);
                 setFormFields(mContact);
 
             } else {
@@ -169,14 +174,16 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         String dob = mDobTv.getText().toString().replace("/", "");
         String dofc = mDofcTv.getText().toString().replace("/", "");
 
-        // Write contact to database
-        mContactManager.addContactToDb(firstName, lastName, phoneNum, dob, dofc);
-
-        // Return to main activity with request code
-        Intent intent = new Intent();
-        setResult(ADD_CONTACT_REQUEST, intent);
-        finish();
-
+        if(!dob.isEmpty()) {
+            // Write contact to file database
+            //mContactManager.addContactToDb(firstName, lastName, phoneNum, dob, dofc);
+            // Write contact to SQLite DB
+            mContactManager2.addContact(firstName, lastName, phoneNum, dob, dofc);
+            // Return to main activity with request code
+            Intent intent = new Intent();
+            setResult(ADD_CONTACT_REQUEST, intent);
+            finish();
+        }
     }
 
     /*This onClick method gets the inputs typed in the form by
@@ -192,14 +199,20 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         String dob = mDobTv.getText().toString().replace("/", "");
         String dofc = mDofcTv.getText().toString().replace("/", "");
 
-        // Write contact to database
-        mContactManager.editContactInDb(mContactId, firstName, lastName, phoneNum, dob, dofc);
+        if (!dob.isEmpty()) {
+            // Write contact to database
+            //mContactManager.editContactInDb(mContactId, firstName, lastName, phoneNum, dob, dofc);
+            // Update contact in SQLite DB
+            mContactManager2.editContact(mContactId, firstName, lastName, phoneNum, dob, dofc);
 
-        // Return to main activity with request code
-        Intent intent = new Intent();
-        intent.putExtra("contactId", mContactId);
-        setResult(EDIT_CONTACT_REQUEST, intent);
-        finish();
+            // Return to main activity with request code
+            Intent intent = new Intent();
+            intent.putExtra("contactId", mContactId);
+            setResult(EDIT_CONTACT_REQUEST, intent);
+            finish();
+        }
+
+
     }
 
     /*This onClick method simply returns
@@ -219,7 +232,8 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     * It takes a view as a parameter and returns void. */
     public void onDelete(View v) {
 
-        mContactManager.deleteContactFromDb(mContact.getId());
+        //mContactManager.deleteContactFromDb(mContact.getId());
+        mContactManager2.deleteContactById(mContact.getId());
 
         Intent intent = new Intent();
         setResult(DELETE_CONTACT_REQUEST, intent);

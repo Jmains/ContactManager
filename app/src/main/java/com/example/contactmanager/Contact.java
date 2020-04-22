@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Contact implements Serializable {
 
-    private final int id; // for random access file pointer
+    private int id; // for random access file pointer
     private String firstName;
     private String lastName;
     private String phoneNum;  // 10 digits
@@ -43,6 +43,8 @@ public class Contact implements Serializable {
         this.dateOfFirstContact = dateOfFirstContact;
         this.id = id;
     }
+
+    public void setId(int id) { this.id = id;}
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;

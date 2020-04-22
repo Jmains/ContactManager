@@ -65,6 +65,7 @@ public class PhoneShake implements SensorEventListener {
 
         if (acceleration > SHAKE_THRESHOLD) {
             // Shake detected
+            Log.d(TAG, "onSensorChanged: Phone shake detected");
             //Log.d(TAG, "onSensorChanged: FInally a shake...smh");
             mPreviousShakeTime = now;
             mShakeListener.onShake();

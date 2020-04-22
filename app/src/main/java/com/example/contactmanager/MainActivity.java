@@ -22,10 +22,14 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -57,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
     ContactListAdapter mContactListAdapter;
     ListView mListView;
     ContactManager mContactManager;
+    ContactManagerTwo mContactManager2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         // Initial Setup
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -93,19 +99,23 @@ public class MainActivity extends AppCompatActivity {
         mListView = findViewById(R.id.id_list_view);
 
         // Grab Database file path
-        mFilePath = new File(getFilesDir(), "contacts.txt");
+        //mFilePath = new File(getFilesDir(), "contacts.txt");
 
         // Grab Database manager, grab contacts and sort
-        mContactManager = new ContactManager(mFilePath);
-        mContactList = mContactManager.getContactList();
+        //mContactManager = new ContactManager(mFilePath);
+        // Grab SQLite DB manager
+        mContactManager2 = new ContactManagerTwo(getApplicationContext());
+        mContactList = mContactManager2.getContactList();
         sortByLastName(mContactList);
 
-        if (mContactList != null && mContactList.size() != 0) {
-            // Inflate the list view with first names of every contact and display it
-            mContactListAdapter = new ContactListAdapter(this,
-                    android.R.layout.simple_list_item_1, mContactList);
-            mListView.setAdapter(mContactListAdapter);
-        }
+        //mContactList = mContactManager.getContactList();
+
+
+        // Inflate the list view with first names of every contact and display it
+        mContactListAdapter = new ContactListAdapter(this,
+                android.R.layout.simple_list_item_1, mContactList);
+        mListView.setAdapter(mContactListAdapter);
+
 
         // Click listener to add a contact. (+) Button on screen
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -137,6 +147,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.id_reinitialize:
+                mContactManager2.reinitialize();
+                if (mContactListAdapter != null) {
+                    mContactListAdapter.clear();
+                }
+                mContactList.clear();
+                mContactListAdapter.addAll(mContactList);
+                mContactListAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.id_import_contacts:
+                importContacts();
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mSm.registerListener(mPhoneShake, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -154,32 +193,86 @@ public class MainActivity extends AppCompatActivity {
         // b/c for now all request codes require updating the UI.
         // Grab the contact list from the contactmanager , sort by
         // last name and inflate the list view.
-        mContactListAdapter.clear();
-        ContactManager cm = new ContactManager(mFilePath);
-        ArrayList<Contact> contacts = cm.getContactList();
-        sortByLastName(contacts);
-        mContactListAdapter.addAll(contacts);
-        mContactListAdapter.notifyDataSetChanged();
+        if (mContactListAdapter != null) {
+            mContactListAdapter.clear();
+        }
+        //ContactManager cm = new ContactManager(mFilePath);
+        ContactManagerTwo cm2 = new ContactManagerTwo(getApplicationContext());
+        ArrayList<Contact> contacts = cm2.getContactList();
+
+        if (contacts != null && contacts.size() != 0) {
+            sortByLastName(contacts);
+            mContactListAdapter.addAll(contacts);
+            mContactListAdapter.notifyDataSetChanged();
+        }
     }
 
     /* Simple method that takes the array list of contacts and
      sorts the contacts by last name. It takes the contacts
      ArrayList as arguments and returns void.*/
     public void sortByLastName(ArrayList<Contact> contacts) {
-        Collections.sort(contacts, new Comparator<Contact>() {
-            @Override
-            public int compare(Contact c1, Contact c2) {
-                int res = c1.getLastName().compareToIgnoreCase(c2.getLastName());
-                if (res != 0) {
-                    return res;
+        if (contacts != null || contacts.size() != 0) {
+            Collections.sort(contacts, new Comparator<Contact>() {
+                @Override
+                public int compare(Contact c1, Contact c2) {
+                    int res = c1.getLastName().compareToIgnoreCase(c2.getLastName());
+                    if (res != 0) {
+                        return res;
+                    }
+                    return c1.getLastName().compareToIgnoreCase(c2.getLastName());
                 }
-                return c1.getLastName().compareToIgnoreCase(c2.getLastName());
-            }
-        });
+            });
+        }
     }
 
+    /*
+    * Simple method that takes the array list of contacts
+    * and sorts the contacts by last name in reverse order.
+    * It takes the contact ArrayList as arguments and returns
+    * void.
+    */
     public void reverseSortByLastName(ArrayList<Contact> contacts) {
-        sortByLastName(mContactList);
-        Collections.reverse(mContactList);
+        sortByLastName(contacts);
+        Collections.reverse(contacts);
+    }
+
+    /*This method opens the contacts text file database,
+    reads the information in the file and stores the contacts
+    from the file in an arraylist, then it appends the current
+    list of contacts with the list of contacts in the file. It then
+    destroys the previous list of contacts in the SQLite DB and
+    creates a new one with the new contacts int it. The view is
+    also updated to show the newly updated contact list. This method
+    takes nothing as parameters and returns void*/
+    public void importContacts() {
+        mFilePath = new File(getFilesDir(), "contacts.txt");
+        mContactManager = new ContactManager(mFilePath);
+        ArrayList<Contact> contactsFromFile = mContactManager.getContactList();
+        ArrayList<Contact> oldContacts = mContactManager2.getContactList();
+        // Append contacts from file with the new contacts
+        contactsFromFile.addAll(oldContacts);
+
+        // Upgrade to new db version
+        mContactManager2.reinitialize();
+        mContactList.clear();
+        // Clear the list adapter
+        if (mContactListAdapter != null) {
+            mContactListAdapter.clear();
+        }
+
+        // Add the contacts to the database
+        for (Contact contact: contactsFromFile) {
+            mContactManager2.addContact(
+                    contact.getFirstName(),
+                    contact.getLastName(),
+                    contact.getPhoneNum(),
+                    contact.getDateOfBirth(),
+                    contact.getDateOfFirstContact()
+            );
+        }
+        mContactList = mContactManager2.getContactListFromDB();
+        // Inflate the list view
+        mContactListAdapter.addAll(mContactList);
+        mContactListAdapter.notifyDataSetChanged();
     }
 }
