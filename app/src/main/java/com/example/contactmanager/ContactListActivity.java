@@ -8,7 +8,7 @@
 *  When adding a contact, users must add the contacts first name, last name,
 *  phone number, date of birth, and date of first contact.
 *
-*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+*  Written by Supachai Main for CS4301.002, ContactManager Part.3 , starting March 9th, 2020.
         NetID: sxm163830 */
 
 package com.example.contactmanager;
@@ -22,11 +22,9 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MainActivity extends AppCompatActivity {
+public class ContactListActivity extends AppCompatActivity {
 
     //private static final String TAG = "MainActivity";
 
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     ContactListAdapter mContactListAdapter;
     ListView mListView;
     ContactManager mContactManager;
-    ContactManagerTwo mContactManager2;
+    DatabaseManager mContactManager2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         // Grab Database manager, grab contacts and sort
         //mContactManager = new ContactManager(mFilePath);
         // Grab SQLite DB manager
-        mContactManager2 = new ContactManagerTwo(getApplicationContext());
+        mContactManager2 = new DatabaseManager(getApplicationContext());
         mContactList = mContactManager2.getContactList();
         sortByLastName(mContactList);
 
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addContactIntent = new Intent(view.getContext(), CreateContact.class);
+                Intent addContactIntent = new Intent(view.getContext(), ContactDetailsActivity.class);
                 addContactIntent.putExtra("mode", ADD_MODE);
                 startActivityForResult(addContactIntent, ADD_CONTACT_REQUEST, null);
             }
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Log.d(TAG, "onItemClick: List item clicked");
 
-                Intent editContactIntent = new Intent(getApplicationContext(), CreateContact.class);
+                Intent editContactIntent = new Intent(getApplicationContext(), ContactDetailsActivity.class);
                 Contact contact = (Contact) parent.getItemAtPosition(position);
                 int contactId = contact.getId();
                 editContactIntent.putExtra("contactId", contactId);
@@ -197,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             mContactListAdapter.clear();
         }
         //ContactManager cm = new ContactManager(mFilePath);
-        ContactManagerTwo cm2 = new ContactManagerTwo(getApplicationContext());
+        DatabaseManager cm2 = new DatabaseManager(getApplicationContext());
         ArrayList<Contact> contacts = cm2.getContactList();
 
         if (contacts != null && contacts.size() != 0) {

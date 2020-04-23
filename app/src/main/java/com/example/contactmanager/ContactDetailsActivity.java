@@ -8,7 +8,7 @@
 *  When adding a contact, users must add the contacts first name, last name,
 *  phone number, date of birth, and date of first contact.
 *
-*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+*  Written by Supachai Main for CS4301.002, ContactManager Part.3 , starting March 9th, 2020.
         NetID: sxm163830 */
 
 package com.example.contactmanager;
@@ -16,14 +16,12 @@ package com.example.contactmanager;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -34,7 +32,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CreateContact extends AppCompatActivity implements DatePickerFragment.OnDateSelected {
+public class ContactDetailsActivity extends AppCompatActivity implements DatePickerFragment.OnDateSelected {
 
     //private static final String TAG = "CreateContactActivity";
 
@@ -50,7 +48,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
 
     // Whether to show date picker as
     // calendar view or spinner view.
-    static final int DOB_TV = 1;    // spinner
+    static final int DOB_TV = 1;    // spinner calendar
     static final int DOFC_TV = 2;   // calendar
 
     // Widgets
@@ -67,7 +65,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     // Member variables
     int mContactId = -1;
     ContactManager mContactManager;
-    ContactManagerTwo mContactManager2;
+    DatabaseManager mDatabaseManager;
     Contact mContact;
     File mFilePath;
 
@@ -100,15 +98,13 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         mFirstNameEt.addTextChangedListener(contactFormTW);
         mLastNameEt.addTextChangedListener(contactFormTW);
         mPhoneNumEt.addTextChangedListener(contactFormTW);
+        mDobTv.addTextChangedListener(contactFormTW);
 
-        // Grab the filepath to the database
         mFilePath = new File(getFilesDir(), "contacts.txt");
-        // Grab the database manager
         mContactManager = new ContactManager(mFilePath);
-        // Grab new db manager
-        mContactManager2 = new ContactManagerTwo(this.getApplicationContext());
+        mDatabaseManager = new DatabaseManager(this.getApplicationContext());
 
-        int mode; // // 1 = add contact, 2 = edit contact
+        int mode; // 1 = add contact, 2 = edit contact
         Intent intent = getIntent();
         if (intent != null) {
 
@@ -130,7 +126,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
                 toolbar.setTitle("Edit Contact");
                 mContactId = intent.getIntExtra("contactId", -1);
                 //mContact = mContactManager.findContactById(mContactId);
-                mContact = mContactManager2.findContactById(mContactId);
+                mContact = mDatabaseManager.findContactById(mContactId);
                 setFormFields(mContact);
 
             } else {
@@ -144,12 +140,15 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     * for DateOfBirthTv(Spinner) and DateOfFirstContactTv (Calendar).
     * It takes a view as parameter and returns void */
     public void showDatePickerDialog(View v) {
+
         Bundle bundle = new Bundle();
         switch (v.getId()) {
+
             case R.id.id_add_dob_tv:
                 bundle.putInt("tvKey", DOB_TV); // 1 for DOB
                 bundle.putInt("datePickerStyle", R.style.CustomDatePickerDialog);
                 break;
+
             case R.id.id_add_dofc_tv:
                 bundle.putInt("tvKey", DOFC_TV);  // 2 for DOFC
                 break;
@@ -174,16 +173,14 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         String dob = mDobTv.getText().toString().replace("/", "");
         String dofc = mDofcTv.getText().toString().replace("/", "");
 
-        if(!dob.isEmpty()) {
-            // Write contact to file database
-            //mContactManager.addContactToDb(firstName, lastName, phoneNum, dob, dofc);
-            // Write contact to SQLite DB
-            mContactManager2.addContact(firstName, lastName, phoneNum, dob, dofc);
-            // Return to main activity with request code
-            Intent intent = new Intent();
-            setResult(ADD_CONTACT_REQUEST, intent);
-            finish();
-        }
+        // Write contact to file database
+        //mContactManager.addContactToDb(firstName, lastName, phoneNum, dob, dofc);
+        // Write contact to SQLite DB
+        mDatabaseManager.addContact(firstName, lastName, phoneNum, dob, dofc);
+        // Return to main activity with request code
+        Intent intent = new Intent();
+        setResult(ADD_CONTACT_REQUEST, intent);
+        finish();
     }
 
     /*This onClick method gets the inputs typed in the form by
@@ -199,20 +196,16 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         String dob = mDobTv.getText().toString().replace("/", "");
         String dofc = mDofcTv.getText().toString().replace("/", "");
 
-        if (!dob.isEmpty()) {
-            // Write contact to database
-            //mContactManager.editContactInDb(mContactId, firstName, lastName, phoneNum, dob, dofc);
-            // Update contact in SQLite DB
-            mContactManager2.editContact(mContactId, firstName, lastName, phoneNum, dob, dofc);
+        // Write contact to database
+        //mContactManager.editContactInDb(mContactId, firstName, lastName, phoneNum, dob, dofc);
+        // Update contact in SQLite DB
+        mDatabaseManager.editContact(mContactId, firstName, lastName, phoneNum, dob, dofc);
 
-            // Return to main activity with request code
-            Intent intent = new Intent();
-            intent.putExtra("contactId", mContactId);
-            setResult(EDIT_CONTACT_REQUEST, intent);
-            finish();
-        }
-
-
+        // Return to main activity with request code
+        Intent intent = new Intent();
+        intent.putExtra("contactId", mContactId);
+        setResult(EDIT_CONTACT_REQUEST, intent);
+        finish();
     }
 
     /*This onClick method simply returns
@@ -220,7 +213,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     * It takes a view as a parameter and
     * returns void.*/
     public void onCancel(View v) {
-        mCancelBtn.setEnabled(true);
+
         Intent intent = new Intent();
         setResult(CANCEL_CONTACT_REQUEST, intent);
         finish();
@@ -233,7 +226,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     public void onDelete(View v) {
 
         //mContactManager.deleteContactFromDb(mContact.getId());
-        mContactManager2.deleteContactById(mContact.getId());
+        mDatabaseManager.deleteContactById(mContact.getId());
 
         Intent intent = new Intent();
         setResult(DELETE_CONTACT_REQUEST, intent);
@@ -246,6 +239,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     parameters and returns void. */
     @Override
     public void sendDate(String date, int tvKey) {
+
         //Log.d(TAG, "sendData: input received");
         switch (tvKey) {
             case DOB_TV:
@@ -258,13 +252,13 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
                 mDobTv.setText(date);
                 mDofcTv.setText(date);
         }
-
     }
 
     /*This method takes the a contact object as a parameter
     * and fills in the current contacts data into the form fields.
     * It returns void.*/
     private void setFormFields(Contact contact) {
+
         mFirstNameEt.setText(contact.getFirstName());
         mLastNameEt.setText(contact.getLastName());
         mPhoneNumEt.setText(contact.getPhoneNum());
@@ -282,16 +276,16 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
     * button depending on if we're in edit or add mode in this activity. Else
     * disable the buttons. */
     private TextWatcher contactFormTW = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String fName = mFirstNameEt.getText().toString().trim();
             String lName = mLastNameEt.getText().toString().trim();
             String phoneNum = mPhoneNumEt.getText().toString().trim();
+            String dob = mDobTv.getText().toString().trim();
 
             // Automatically hide soft keyboard when 10 numbers are entered
             // in the phone number field
@@ -299,7 +293,7 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
                 hideSoftKeyBoard();
             }
 
-            if (!fName.isEmpty() && !lName.isEmpty() && !phoneNum.isEmpty()) {
+            if (!fName.isEmpty() && !lName.isEmpty() && !phoneNum.isEmpty() && !dob.isEmpty()) {
                 mSaveBtn.setEnabled(true);
                 mAddBtn.setEnabled(true);
             } else {
@@ -309,14 +303,13 @@ public class CreateContact extends AppCompatActivity implements DatePickerFragme
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) { }
     };
 
     /*Simple method to hide soft keyboard returns void and
     * takes no parameters. */
     private void hideSoftKeyBoard() {
+
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (imm.isAcceptingText()) { // Check keyboard is open
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);

@@ -8,7 +8,7 @@
 *  When adding a contact, users must add the contacts first name, last name,
 *  phone number, date of birth, and date of first contact.
 *
-*  Written by Supachai Main for CS4301.002, ContactManager Part.1 , starting March 9th, 2020.
+*  Written by Supachai Main for CS4301.002, ContactManager Part.3 , starting March 9th, 2020.
         NetID: sxm163830 */
 
 package com.example.contactmanager;

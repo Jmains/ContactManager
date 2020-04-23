@@ -1,11 +1,27 @@
+/* Contact Manager Program
+*
+*  A simple android app that mimics the functionality of a contact manager
+*  in either Android or iOS phones. Users can view their list of contacts
+*  sorted in alphabetical order by last name. They may also add, edit,
+*  and remove a contact from the contact list when a contact is tapped on.
+*
+*  When adding a contact, users must add the contacts first name, last name,
+*  phone number, date of birth, and date of first contact.
+*
+*  Written by Supachai Main for CS4301.002, ContactManager Part.3 , starting March 9th, 2020.
+        NetID: sxm163830 */
+
 package com.example.contactmanager;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
-import androidx.annotation.Nullable;
+/* This class creates a new database if one does not exist.
+* Its constructor receives the application context as parameter
+* as creates a database with SQliteOpenHelper. The class handles
+* all changes to the database schema.
+* */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -32,6 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_USERS);
     }
 
+    /*Once upgrade drop all previous tables and create a new one with the
+    specified tables*/
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + UserContract.UserTable.TABLE_NAME);
@@ -41,10 +59,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.setVersion(newVersion);
-    }
-
-    public static int incrementDbVersion() {
-        ++DATABASE_VERSION;
-        return DATABASE_VERSION;
     }
 }
