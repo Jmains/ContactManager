@@ -153,6 +153,7 @@ public class ContactListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.id_reinitialize:
                 mContactManager2.reinitialize();
