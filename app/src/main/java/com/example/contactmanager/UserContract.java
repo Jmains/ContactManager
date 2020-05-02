@@ -29,5 +29,11 @@ public class UserContract {
         public static final String COLUMN_NAME_PHONE_NUM = "phoneNum";
         public static final String COLUMN_NAME_DOB = "dateOfBirth";
         public static final String COLUMN_NAME_DOFC = "dateOfFirstContact";
+
+        public static final String COLUMN_NAME_ADDRESS_1 = "addressLine1";
+        public static final String COLUMN_NAME_ADDRESS_2 = "addressLine2";
+        public static final String COLUMN_NAME_CITY = "city";
+        public static final String COLUMN_NAME_STATE = "state";
+        public static final String COLUMN_NAME_ZIPCODE = "zipcode";
     }
 }

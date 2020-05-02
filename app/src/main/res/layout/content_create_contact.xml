@@ -8,70 +8,101 @@
     tools:context=".ContactDetailsActivity"
     tools:showIn="@layout/activity_create_contact">
 
+    <EditText
+        android:id="@+id/id_address_2_editText"
+        android:layout_width="273dp"
+        android:layout_height="46dp"
+        android:ems="10"
+        android:hint="@string/ex_line_2_string"
+        android:inputType="textPersonName"
+        android:maxLength="25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/id_address_1_editText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/id_address_1_editText"
+        app:layout_constraintTop_toBottomOf="@+id/id_address_2_textView"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <TextView
+        android:id="@+id/id_address_2_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/address_line_2_string"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/id_address_1_textView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/id_address_1_textView"
+        app:layout_constraintTop_toBottomOf="@+id/id_address_1_editText"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/id_add_dofc_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginStart="20dp"
         android:background="@android:color/black"
         android:drawableStart="@android:drawable/ic_input_add"
         android:onClick="showDatePickerDialog"
-        app:layout_constraintEnd_toEndOf="@+id/id_phone_num_tedit"
-        app:layout_constraintHorizontal_bias="0.382"
-        app:layout_constraintStart_toEndOf="@+id/id_dob_tv"
-        app:layout_constraintTop_toBottomOf="@+id/id_phone_num_tedit" />
+        app:layout_constraintBottom_toTopOf="@+id/id_show_dofc_tv"
+        app:layout_constraintEnd_toEndOf="@+id/id_add_dob_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/id_dofc_tv" />
 
     <EditText
         android:id="@+id/id_first_name_tedit"
-        android:layout_width="380dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="190dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/ex_man_string"
         android:inputType="textPersonName"
         android:maxLength="25"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.387"
+        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/id_last_name_tedit"
-        android:layout_width="0dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="174dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="24dp"
         android:ems="10"
         android:hint="@string/ex_iron_string"
         android:inputType="textPersonName"
         android:maxLength="25"
-        app:layout_constraintEnd_toEndOf="@+id/id_first_name_tedit"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/id_first_name_tedit"
-        app:layout_constraintTop_toBottomOf="@+id/id_first_name_tedit" />
+        app:layout_constraintBottom_toBottomOf="@+id/id_first_name_tedit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/id_first_name_tedit"
+        app:layout_constraintTop_toBottomOf="@+id/id_last_name_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
 
     <EditText
         android:id="@+id/id_phone_num_tedit"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="177dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/ex_5126335449_string"
         android:inputType="phone"
         android:maxLength="10"
         app:layout_constraintEnd_toEndOf="@+id/id_first_name_tedit"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/id_first_name_tedit"
         app:layout_constraintTop_toBottomOf="@+id/id_last_name_tedit" />
-
 
     <TextView
         android:id="@+id/id_first_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="10dp"
         android:background="#8A89DD36"
         android:backgroundTint="#FFFFFF"
         android:text="@string/first_name_string"
-        android:textSize="21sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/id_first_name_tedit"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -79,19 +110,21 @@
         android:id="@+id/id_last_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="132dp"
         android:text="@string/last_name_string"
-        android:textSize="21sp"
-        app:layout_constraintBottom_toTopOf="@+id/id_last_name_tedit"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/id_first_name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.113"
+        app:layout_constraintStart_toEndOf="@+id/id_first_name_tv" />
 
     <TextView
         android:id="@+id/id_phone_num_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:text="@string/phone_string"
-        android:textSize="21sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/id_phone_num_tedit"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -99,58 +132,67 @@
         android:id="@+id/id_dob_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="8dp"
 
+        android:layout_marginTop="28dp"
         android:text="@string/date_of_birth_string"
-        android:textSize="21sp"
-        app:layout_constraintBottom_toTopOf="@+id/id_show_dob_tv"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_city_editText"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/id_dofc_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="@string/date_of_first_contact_string"
-        android:textSize="21sp"
-        app:layout_constraintBottom_toTopOf="@+id/id_show_dofc_tv"
-        app:layout_constraintStart_toStartOf="@+id/id_dob_tv" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/id_dob_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.014"
+        app:layout_constraintStart_toStartOf="@+id/id_show_dofc_tv"
+        app:layout_constraintTop_toBottomOf="@+id/id_zipcode_editText"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/id_show_dob_tv"
-        android:layout_width="0dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="153dp"
+        android:layout_height="35dp"
         android:text=""
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/id_first_name_tedit"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/id_first_name_tedit"
-        app:layout_constraintTop_toBottomOf="@+id/id_add_dob_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/id_dob_tv"
+        app:layout_constraintVertical_bias="0.053" />
 
     <TextView
         android:id="@+id/id_add_dob_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="8dp"
         android:background="@android:color/black"
         android:drawableStart="@android:drawable/ic_input_add"
         android:onClick="showDatePickerDialog"
-        app:layout_constraintEnd_toEndOf="@+id/id_phone_num_tedit"
-        app:layout_constraintHorizontal_bias="0.072"
-        app:layout_constraintStart_toEndOf="@+id/id_dob_tv"
-        app:layout_constraintTop_toBottomOf="@+id/id_phone_num_tedit" />
+        app:layout_constraintBottom_toTopOf="@+id/id_show_dob_tv"
+        app:layout_constraintStart_toEndOf="@+id/id_dob_tv" />
 
     <TextView
         android:id="@+id/id_show_dofc_tv"
-        android:layout_width="0dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="152dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="32dp"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/id_first_name_tedit"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/id_first_name_tedit"
-        app:layout_constraintTop_toBottomOf="@+id/id_add_dofc_tv" />
+        app:layout_constraintBottom_toBottomOf="@+id/id_show_dob_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toEndOf="@+id/id_show_dob_tv"
+        app:layout_constraintTop_toBottomOf="@+id/id_dofc_tv"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/id_save_button"
@@ -166,7 +208,7 @@
         app:layout_constraintHorizontal_bias="0.221"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
-        app:layout_constraintVertical_bias="0.415" />
+        app:layout_constraintVertical_bias="0.721" />
 
     <Button
         android:id="@+id/id_add_button"
@@ -180,10 +222,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/id_cancel_button"
-        app:layout_constraintHorizontal_bias="0.791"
+        app:layout_constraintHorizontal_bias="0.702"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
-        app:layout_constraintVertical_bias="0.507" />
+        app:layout_constraintVertical_bias="0.788" />
 
     <Button
         android:id="@+id/id_delete_button"
@@ -196,10 +238,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.683"
+        app:layout_constraintHorizontal_bias="0.689"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
-        app:layout_constraintVertical_bias="0.423" />
+        app:layout_constraintVertical_bias="0.729" />
 
     <Button
         android:id="@+id/id_cancel_button"
@@ -216,8 +258,117 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/id_show_dofc_tv"
+        app:layout_constraintVertical_bias="0.794" />
 
+    <EditText
+        android:id="@+id/id_address_1_editText"
+        android:layout_width="273dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/ex_12563_kryptonite_lane_string"
+        android:inputType="textPersonName"
+        android:maxLength="25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/id_phone_num_tedit"
+        app:layout_constraintTop_toBottomOf="@+id/id_address_1_textView"
+        app:layout_constraintVertical_bias="0.004" />
+
+    <TextView
+        android:id="@+id/id_address_1_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/address_line_1_string"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/id_phone_num_tedit"
+        app:layout_constraintTop_toBottomOf="@+id/id_phone_num_tedit"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/id_city_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="276dp"
+        android:text="@string/city_string"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_address_2_editText"
+        app:layout_constraintVertical_bias="0.506" />
+
+    <TextView
+        android:id="@+id/id_state_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:text="@string/state_string"
+        app:layout_constraintBottom_toBottomOf="@+id/id_city_textView"
+        app:layout_constraintStart_toEndOf="@+id/id_city_textView"
+        app:layout_constraintTop_toTopOf="@+id/id_city_textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/id_zipcode_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:text="@string/zip_code_string"
+        app:layout_constraintBottom_toBottomOf="@+id/id_state_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/id_state_textView"
+        app:layout_constraintTop_toTopOf="@+id/id_state_textView"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/id_city_editText"
+        android:layout_width="144dp"
+        android:layout_height="44dp"
+        android:ems="10"
+        android:hint="@string/ex_richardson_string"
+        android:inputType="textPersonName"
+        android:maxLength="25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/id_address_2_editText"
+        app:layout_constraintTop_toBottomOf="@+id/id_city_textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/id_state_editText"
+        android:layout_width="79dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:hint="@string/ex_tx_string"
+        android:inputType="textPersonName"
+        android:maxLength="2"
+        app:layout_constraintBottom_toBottomOf="@+id/id_city_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.005"
+        app:layout_constraintStart_toEndOf="@+id/id_city_editText"
+        app:layout_constraintTop_toBottomOf="@+id/id_state_textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/id_zipcode_editText"
+        android:layout_width="149dp"
+        android:layout_height="43dp"
+        android:ems="10"
+        android:hint="@string/ex_75080_string"
+        android:inputType="number"
+        android:maxLength="5"
+        app:layout_constraintBottom_toBottomOf="@+id/id_state_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/id_state_editText"
+        app:layout_constraintTop_toBottomOf="@+id/id_zipcode_textView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,9 @@ import androidx.fragment.app.DialogFragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -61,6 +64,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
     EditText mFirstNameEt;
     EditText mLastNameEt;
     EditText mPhoneNumEt;
+    EditText mAddress1Et;
+    EditText mAddress2Et;
+    EditText mCityEt;
+    EditText mStateEt;
+    EditText mZipcodeEt;
 
     // Member variables
     int mContactId = -1;
@@ -82,6 +90,11 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
         mFirstNameEt = findViewById(R.id.id_first_name_tedit);
         mLastNameEt = findViewById(R.id.id_last_name_tedit);
         mPhoneNumEt = findViewById(R.id.id_phone_num_tedit);
+        mAddress1Et = findViewById(R.id.id_address_1_editText);
+        mAddress2Et = findViewById(R.id.id_address_2_editText);
+        mCityEt = findViewById(R.id.id_city_editText);
+        mStateEt = findViewById(R.id.id_state_editText);
+        mZipcodeEt = findViewById(R.id.id_zipcode_editText);
         mSaveBtn = findViewById(R.id.id_save_button);
         mAddBtn = findViewById(R.id.id_add_button);
         mCancelBtn = findViewById(R.id.id_cancel_button);
@@ -99,6 +112,13 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
         mLastNameEt.addTextChangedListener(contactFormTW);
         mPhoneNumEt.addTextChangedListener(contactFormTW);
         mDobTv.addTextChangedListener(contactFormTW);
+
+        //Address Text Watchers
+        mAddress1Et.addTextChangedListener(contactFormTW);
+        mAddress2Et.addTextChangedListener(contactFormTW);
+        mCityEt.addTextChangedListener(contactFormTW);
+        mStateEt.addTextChangedListener(contactFormTW);
+        mZipcodeEt.addTextChangedListener(contactFormTW);
 
         mFilePath = new File(getFilesDir(), "contacts.txt");
         mContactManager = new ContactManager(mFilePath);
@@ -132,6 +152,38 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
             } else {
                 //Log.d(TAG, "onCreate: No mode was received");
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.id_map_address:
+                String address1 = mDatabaseManager.findContactById(mContactId).getAddress1();
+                String address2 = mDatabaseManager.findContactById(mContactId).getAddress2();
+                String fullAddress = address1 + address2;
+                if (!fullAddress.isEmpty()) {
+                    Intent intent = new Intent(this, MapAddressActivity.class);
+                    intent.putExtra("fullAddress", fullAddress);
+                    startActivity(intent);
+                }
+
+
+
+                // Open new activity and do reverse geocoding
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -173,10 +225,21 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
         String dob = mDobTv.getText().toString().replace("/", "");
         String dofc = mDofcTv.getText().toString().replace("/", "");
 
+        // Address Details
+        String address1 = mAddress1Et.getText().toString().toUpperCase().trim();
+        String address2 = mAddress2Et.getText().toString().toUpperCase().trim();
+        String city = mCityEt.getText().toString().toUpperCase().trim();
+        String state = mStateEt.getText().toString().toUpperCase().trim();
+        String zipcode = mZipcodeEt.getText().toString().toUpperCase().trim();
+
         // Write contact to file database
         //mContactManager.addContactToDb(firstName, lastName, phoneNum, dob, dofc);
         // Write contact to SQLite DB
-        mDatabaseManager.addContact(firstName, lastName, phoneNum, dob, dofc);
+
+        //mDatabaseManager.addContact(firstName, lastName, phoneNum, dob, dofc);
+        mDatabaseManager.addContact(firstName, lastName, phoneNum, dob, dofc,
+                address1, address2, city, state, zipcode);
+
         // Return to main activity with request code
         Intent intent = new Intent();
         setResult(ADD_CONTACT_REQUEST, intent);
@@ -196,10 +259,19 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
         String dob = mDobTv.getText().toString().replace("/", "");
         String dofc = mDofcTv.getText().toString().replace("/", "");
 
+        // Address Details
+        String address1 = mAddress1Et.getText().toString().toUpperCase().trim();
+        String address2 = mAddress2Et.getText().toString().toUpperCase().trim();
+        String city = mCityEt.getText().toString().toUpperCase().trim();
+        String state = mStateEt.getText().toString().toUpperCase().trim();
+        String zipcode = mZipcodeEt.getText().toString().toUpperCase().trim();
+
         // Write contact to database
         //mContactManager.editContactInDb(mContactId, firstName, lastName, phoneNum, dob, dofc);
         // Update contact in SQLite DB
-        mDatabaseManager.editContact(mContactId, firstName, lastName, phoneNum, dob, dofc);
+        //mDatabaseManager.editContact(mContactId, firstName, lastName, phoneNum, dob, dofc);
+        mDatabaseManager.editContact(mContactId, firstName, lastName, phoneNum, dob, dofc,
+                address1, address2, city, state, zipcode);
 
         // Return to main activity with request code
         Intent intent = new Intent();
@@ -262,6 +334,13 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
         mFirstNameEt.setText(contact.getFirstName());
         mLastNameEt.setText(contact.getLastName());
         mPhoneNumEt.setText(contact.getPhoneNum());
+        // Set Address details
+        mAddress1Et.setText(contact.getAddress1());
+        mAddress2Et.setText(contact.getAddress2());
+        mCityEt.setText(contact.getCity());
+        mStateEt.setText(contact.getState());
+        mZipcodeEt.setText(contact.getZipcode());
+
         // Add slashes to separate month day and year
         String dob = contact.getDateOfBirth();
         dob = dob.substring(0,2) + "/" + dob.substring(2,4) + "/" + dob.substring(4);
@@ -287,13 +366,21 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
             String phoneNum = mPhoneNumEt.getText().toString().trim();
             String dob = mDobTv.getText().toString().trim();
 
+            // Address details
+            String address1 = mAddress1Et.getText().toString().trim();
+            String address2 = mAddress2Et.getText().toString().trim();
+            String state = mStateEt.getText().toString().trim();
+            String city = mCityEt.getText().toString().trim();
+            String zipcode = mZipcodeEt.getText().toString().trim();
+
             // Automatically hide soft keyboard when 10 numbers are entered
             // in the phone number field
-            if (phoneNum.length() == 10) {
-                hideSoftKeyBoard();
-            }
+//            if (phoneNum.length() == 10 || zipcode.length() == 5) {
+//                hideSoftKeyBoard();
+//            }
 
-            if (!fName.isEmpty() && !lName.isEmpty() && !phoneNum.isEmpty() && !dob.isEmpty()) {
+            if (!fName.isEmpty() && !lName.isEmpty() && !phoneNum.isEmpty() && !dob.isEmpty()
+            && !address1.isEmpty() && !state.isEmpty() && !city.isEmpty() && !zipcode.isEmpty()) {
                 mSaveBtn.setEnabled(true);
                 mAddBtn.setEnabled(true);
             } else {
@@ -309,9 +396,9 @@ public class ContactDetailsActivity extends AppCompatActivity implements DatePic
     /*Simple method to hide soft keyboard returns void and
     * takes no parameters. */
     private void hideSoftKeyBoard() {
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (imm.isAcceptingText()) { // Check keyboard is open
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }

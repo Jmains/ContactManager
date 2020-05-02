@@ -15,4 +15,16 @@
     <string name="add_string">add</string>
     <string name="reinitialize_string">Reinitialize</string>
     <string name="import_contacts_from_file_string">Import Contacts</string>
+    <string name="ex_richardson_string">ex. Richardson</string>
+    <string name="ex_75080_string">ex. 75080</string>
+    <string name="ex_tx_string">ex. TX</string>
+    <string name="zip_code_string">Zip code</string>
+    <string name="state_string">State</string>
+    <string name="city_string">City</string>
+    <string name="address_line_1_string">Address Line 1</string>
+    <string name="ex_12563_kryptonite_lane_string">ex. 12563 Kryptonite Lane</string>
+    <string name="ex_line_2_string"></string>
+    <string name="address_line_2_string">Address Line 2</string>
+    <string name="map_address_string">Map address</string>
+    <string name="title_activity_map_address">Map</string>
 </resources>

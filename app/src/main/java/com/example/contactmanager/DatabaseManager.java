@@ -74,7 +74,13 @@ public class DatabaseManager {
                         cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_LAST_NAME)),
                         cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_PHONE_NUM)),
                         cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_DOB)),
-                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_DOFC))
+                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_DOFC)),
+
+                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_ADDRESS_1)),
+                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_ADDRESS_2)),
+                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_CITY)),
+                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_STATE)),
+                        cs.getString(cs.getColumnIndexOrThrow(UserContract.UserTable.COLUMN_NAME_ZIPCODE))
                 );
                 mContactList.add(contact);
             }
@@ -87,7 +93,8 @@ public class DatabaseManager {
     }
     /*This method takes in a first name, last name, phone num, date of birth, and date of first contact
     * as parameters and adds the new user in the database. Returns void. */
-    public void addContact(String fName, String lName, String phoneNum, String dob, String dofc) {
+    public void addContact(String fName, String lName, String phoneNum, String dob, String dofc,
+                           String address1, String address2, String city, String state, String zipcode) {
 
         try {
             ContentValues cv = new ContentValues();
@@ -96,6 +103,12 @@ public class DatabaseManager {
             cv.put(UserContract.UserTable.COLUMN_NAME_PHONE_NUM, phoneNum);
             cv.put(UserContract.UserTable.COLUMN_NAME_DOB, dob);
             cv.put(UserContract.UserTable.COLUMN_NAME_DOFC, dofc);
+
+            cv.put(UserContract.UserTable.COLUMN_NAME_ADDRESS_1, address1);
+            cv.put(UserContract.UserTable.COLUMN_NAME_ADDRESS_2, address2);
+            cv.put(UserContract.UserTable.COLUMN_NAME_CITY, city);
+            cv.put(UserContract.UserTable.COLUMN_NAME_STATE, state);
+            cv.put(UserContract.UserTable.COLUMN_NAME_ZIPCODE, zipcode);
 
             db.insert(UserContract.UserTable.TABLE_NAME, null, cv);
 
@@ -106,7 +119,8 @@ public class DatabaseManager {
 
     /*This method searches the database for the contact given the contact id as a parameter.
     * Then updates that id with the given fields. Returns void. */
-    public void editContact(int id, String fName, String lName, String phoneNum, String dob, String dofc) {
+    public void editContact(int id, String fName, String lName, String phoneNum, String dob, String dofc,
+                            String address1, String address2, String city, String state, String zipcode) {
 
         try {
             String where = "_ID=?";
@@ -117,6 +131,13 @@ public class DatabaseManager {
             cv.put(UserContract.UserTable.COLUMN_NAME_PHONE_NUM, phoneNum);
             cv.put(UserContract.UserTable.COLUMN_NAME_DOB, dob);
             cv.put(UserContract.UserTable.COLUMN_NAME_DOFC, dofc);
+
+            cv.put(UserContract.UserTable.COLUMN_NAME_ADDRESS_1, address1);
+            cv.put(UserContract.UserTable.COLUMN_NAME_ADDRESS_2, address2);
+            cv.put(UserContract.UserTable.COLUMN_NAME_CITY, city);
+            cv.put(UserContract.UserTable.COLUMN_NAME_STATE, state);
+            cv.put(UserContract.UserTable.COLUMN_NAME_ZIPCODE, zipcode);
+
             db.update(UserContract.UserTable.TABLE_NAME, cv, where, whereArgs);
 
         } catch (Exception ex) {
@@ -165,6 +186,26 @@ public class DatabaseManager {
                 UserContract.UserTable.COLUMN_NAME_DOB + " varchar(10), " +
                 UserContract.UserTable.COLUMN_NAME_DOFC + " varchar(10)" +
                 ")"
+        );
+        db.execSQL(
+                "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                        " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_ADDRESS_1 + " varchar(25);"
+        );
+        db.execSQL(
+                "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                        " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_ADDRESS_2 + " varchar(25);"
+        );
+        db.execSQL(
+                "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                        " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_CITY + " varchar(25);"
+        );
+        db.execSQL(
+                "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                        " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_STATE + " varchar(2);"
+        );
+        db.execSQL(
+                "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                        " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_ZIPCODE + " varchar(5);"
         );
         //DatabaseHelper.incrementDbVersion();
         mContactList.clear();

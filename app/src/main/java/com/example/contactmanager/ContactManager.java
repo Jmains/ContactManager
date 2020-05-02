@@ -103,7 +103,12 @@ public class ContactManager {
                         lName1.trim(),
                         phoneNum1.trim(),
                         birthDate1.trim(),
-                        dayOfFirstContact1.trim()
+                        dayOfFirstContact1.trim(),
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
                 );
 
 

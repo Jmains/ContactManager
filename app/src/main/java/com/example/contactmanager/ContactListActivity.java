@@ -170,6 +170,7 @@ public class ContactListActivity extends AppCompatActivity {
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
+                item.setVisible(false);
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -266,7 +267,12 @@ public class ContactListActivity extends AppCompatActivity {
                     contact.getLastName(),
                     contact.getPhoneNum(),
                     contact.getDateOfBirth(),
-                    contact.getDateOfFirstContact()
+                    contact.getDateOfFirstContact(),
+                    contact.getAddress1(),
+                    contact.getAddress2(),
+                    contact.getCity(),
+                    contact.getState(),
+                    contact.getZipcode()
             );
         }
         mContactList = mContactManager2.getContactListFromDB();

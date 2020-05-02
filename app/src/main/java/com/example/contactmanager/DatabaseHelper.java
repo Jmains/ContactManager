@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static int DATABASE_VERSION = 1;
+    private static int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Contacts.db";
 
     private static final String SQL_CREATE_USERS =
@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     UserContract.UserTable.COLUMN_NAME_LAST_NAME + " varchar(25) NOT NULL, " +
                     UserContract.UserTable.COLUMN_NAME_PHONE_NUM + " varchar(25) NOT NULL, " +
                     UserContract.UserTable.COLUMN_NAME_DOB + " varchar(10), " +
-                    UserContract.UserTable.COLUMN_NAME_DOFC + " varchar(10)" +
+                    UserContract.UserTable.COLUMN_NAME_DOFC + " varchar(10) " +
                     ")";
 
     public DatabaseHelper(Context context) {
@@ -48,16 +48,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_USERS);
     }
 
-    /*Once upgrade drop all previous tables and create a new one with the
-    specified tables*/
+    /*Once db version increase add new fields*/
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + UserContract.UserTable.TABLE_NAME);
-        onCreate(db);
+        int upgradeTo = oldVersion + 1;
+        while(upgradeTo <= newVersion) {
+            switch(upgradeTo) {
+                case 2: db.execSQL(
+                        "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                                " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_ADDRESS_1 + " varchar(25);"
+                    );
+                    db.execSQL(
+                            "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                                    " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_ADDRESS_2 + " varchar(25);"
+                    );
+                    db.execSQL(
+                            "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                                    " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_CITY + " varchar(25);"
+                    );
+                    db.execSQL(
+                            "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                                    " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_STATE + " varchar(2);"
+                    );
+                    db.execSQL(
+                            "ALTER TABLE " + UserContract.UserTable.TABLE_NAME +
+                                    " ADD COLUMN " + UserContract.UserTable.COLUMN_NAME_ZIPCODE + " varchar(5);"
+                    );
+                    break;
+            }
+            upgradeTo++;
+        }
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.setVersion(newVersion);
+        //db.setVersion(newVersion);
     }
 }

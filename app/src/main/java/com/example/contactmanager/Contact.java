@@ -24,6 +24,11 @@ public class Contact implements Serializable {
     private String phoneNum;  // 10 digits
     private String dateOfBirth; // 10 characters
     private String dateOfFirstContact; // 10 characters
+    private String address1 = "";
+    private String address2 = "";
+    private String city = "";
+    private String state = "";
+    private String zipcode = "";
     private static final AtomicInteger count = new AtomicInteger(0);
 
     Contact(String firstName, String lastName, String phoneNum, String birthDate, String dateOfFirstContact) {
@@ -35,12 +40,20 @@ public class Contact implements Serializable {
         id = count.incrementAndGet();
     }
 
-    Contact(int id, String firstName, String lastName, String phoneNum, String birthDate, String dateOfFirstContact) {
+    Contact(int id, String firstName, String lastName, String phoneNum, String birthDate, String dateOfFirstContact,
+            String address1, String address2, String city, String state, String zipcode) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNum = phoneNum;
         this.dateOfBirth = birthDate;
         this.dateOfFirstContact = dateOfFirstContact;
+
+        this.address1 = address1;
+        this.address2 = address2;
+        this.city = city;
+        this.state = state;
+        this.zipcode = zipcode;
+
         this.id = id;
     }
 
@@ -88,5 +101,45 @@ public class Contact implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 }

@@ -12,5 +12,10 @@
         android:orderInCategory="102"
         android:title="@string/import_contacts_from_file_string"
         />
+    <item
+        android:id="@+id/id_map_address"
+        android:orderInCategory="103"
+        android:title="@string/map_address_string"
+        />
 
 </menu>
